@@ -1,39 +1,105 @@
 @import "tailwindcss";
+:root {
+    --main-color:#F2DFCE;
+}
 body {
   text-align: center;
+  margin: auto;
   padding: 1rem;
+  max-width: 1440px;
   background-color: #F2DFCE;
 }
 /* ==================================================================================================== */
-
-.grid-container {
-  display: grid;
+/* ======== GRID ================================ */
+.page-grid {
+  display: flex;
+  flex-direction: column;
   gap: .35rem;
-  grid-template-columns: 1fr;
-  max-width: 1520px;
-  margin: auto;
-}
-.grid-container.black {
-  background-color: black;
 }
 
-.widget {
-  container-type: inline-size;
-  background-color: #F2DFCE;
-  min-height: 10rem;
-  text-align: left;
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  min-width: 12rem;
 }
+.column.center {
+  order: -1;
+}
+
+.brick {
+  container-type: inline-size;
+  display: flex;
+  min-height: 9rem;
+  background-color: var(--main-color);
+  gap: .35rem;
+}
+
+.brick > .widget {
+  flex: 1;
+}
+
+.brick > .widget.featured {
+  flex: 2;
+  border-radius: .5rem;
+  min-height: 28rem;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ============= COMPONENTS =================================================== */
+
+.search {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 290px; /* fill the brick */
+  padding: 8px;
+  background-color: rgba(45,45,45,1);
+  color: #f2e6db;
+}
+input[type=text] {
+  margin: auto;
+  margin-top: 3rem;
+  width: 100%;
+  padding: 8px;
+  color: #333;
+  border-radius: 2px;
+  background-color: var(--main-color);
+}
+.search .footer {
+  margin-top: auto
+}
+
+/* ============= QUERRIES ================================================================= */
 
 @media only screen and (min-width: 640px) {
-  .grid-container {
-    grid-template-columns: repeat(2, 1fr);
+  .page-grid {
+    display: flex;
+    flex-direction: row;
+  }
+  .column {
+    flex: 1;
+  }
+  .column.center {
+    flex: 2;
+    order: 0;
   }
 }
 
 @media only screen and (min-width: 1024px) {
-  .grid-container {
-    grid-template-columns: repeat(4, 1fr);
+  .page-grid {
+    display: grid;
+    gap: .35rem;
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+  
+  input {
+    width: 90%;
+    padding: 12px;
+    border: 3px solid #333;
+    border-style: double;
   }
 }
+
 
 /* ==================================================================================================== */
