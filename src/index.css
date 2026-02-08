@@ -1,13 +1,16 @@
 @import "tailwindcss";
 :root {
-    --main-color:#F2DFCE;
+    --main-color:#f7e8df;
+    --main-dark: 51 51 51;
+    /* #F2DFCE */
 }
 body {
   text-align: center;
   margin: auto;
   padding: 1rem;
   max-width: 1440px;
-  background-color: #F2DFCE;
+  background-color: var(--main-color);
+  font-size: 16px;
 }
 /* ==================================================================================================== */
 /* ======== GRID ================================ */
@@ -29,10 +32,15 @@ body {
 
 .brick {
   container-type: inline-size;
+  container-name: brick;
   display: flex;
   min-height: 9rem;
   background-color: var(--main-color);
-  gap: .35rem;
+  gap: .75rem;
+}
+
+.widget {
+  margin-bottom: .8rem;
 }
 
 .brick > .widget {
@@ -45,6 +53,63 @@ body {
   min-height: 28rem;
   background: rgba(0, 0, 0, 0.1);
 }
+/* for vertically spanned widgets */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  flex: 1;
+}
+
+/* ------ Widget elements ------------------------------------------------------ */
+.title {
+  font-family: "Vollkorn", serif;
+}
+.header {
+  margin: .5rem auto;
+  margin-bottom: 18px;
+  font-family: "Vollkorn", serif;
+  font-size: 2rem;
+  text-align: left;
+}
+.subheader {
+  font-size: 1rem;
+  font-family: "Vollkorn", serif;
+  text-align: left;
+  line-height: 1rem;
+}
+.brand {
+  width: 100%;
+  height: 60px;
+  border: double 1px black;
+  border-width: 0 8px;
+  font-family: "Diplomata SC", serif;
+  font-size: 2rem;
+  font-weight: 400;
+  font-style: normal;
+}
+.timestamp {
+  margin-bottom: .6rem;
+  padding: .15rem;
+  text-align: left;
+  font-family: Cinzel, serif;
+  font-size: 8px;
+  text-transform: uppercase;
+  background-color: rgb(var(--main-dark) / 0.15);
+}
+.timestamp.dark {
+  color: var(--main-color);
+  background: rgb(var(--main-dark) / 1);
+}
+.widget.number {
+  font: 4rem "Anton", sans-serif;
+}
+.widget .body {
+  padding: 1px;
+  font-family: "Crimson Pro", serif;
+  font-size: 1.1rem;
+  text-align: left;
+}
 
 /* ============= COMPONENTS =================================================== */
 
@@ -52,22 +117,28 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 290px; /* fill the brick */
-  padding: 8px;
+  min-height: 20rem; /* fill the brick */
+  padding: 1rem;
   background-color: rgba(45,45,45,1);
   color: #f2e6db;
 }
 input[type=text] {
   margin: auto;
-  margin-top: 3rem;
-  width: 100%;
-  padding: 8px;
-  color: #333;
-  border-radius: 2px;
+  margin-top: .1rem;
+  width: 90%;
+  padding: 1.5rem 1rem;
+  color: --main-dark;
+  border-radius: 2rem;
   background-color: var(--main-color);
 }
 .search .footer {
   margin-top: auto
+}
+
+/* ==================================================================================================== */
+h1 {
+  margin: 1.3rem auto;
+  font-size: 1.3rem;
 }
 
 /* ============= QUERRIES ================================================================= */
@@ -84,22 +155,41 @@ input[type=text] {
     flex: 2;
     order: 0;
   }
+
+  input {
+    width: 80%;
+    padding: 1.7rem;
+    border: .3rem solid --main-dark;
+    border-style: double;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
   .page-grid {
     display: grid;
-    gap: .35rem;
+    gap: .55rem;
     grid-template-columns: 1fr 2fr 1fr;
+  }
+  .brand {
+    font-size: 3rem;
+  }
+  .search {
+    padding: 1.1rem;
+    min-height: 22rem;
   }
   
   input {
-    width: 90%;
-    padding: 12px;
-    border: 3px solid #333;
+    width: 60%;
     border-style: double;
+  }
+  h1 {
+    font-size: 1.6rem;
   }
 }
 
-
-/* ==================================================================================================== */
+@container brick (min-width: 200px) {
+  .brick > .widget::after { content: "200+"}
+}
+@container brick (min-width: 400px) {
+  .brick > .widget::after { content: "400+"}
+}
