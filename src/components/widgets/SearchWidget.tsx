@@ -26,8 +26,10 @@ export default function SearchWidget () {
         const data = await searchContent(value)
         setResults(data)
         
-      } catch (err) {}
-    })
+      } catch (err) {
+        console.log(err)
+      }
+    }, 300)
   }
 
   return (
