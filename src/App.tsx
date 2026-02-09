@@ -141,6 +141,37 @@ function App() {
               </div>
             </div>
           </div>
+          {/* Try Stack */}
+          <div className="brick">
+            
+            <div className="widget">
+              <div className='timestamp'>services | Oct 01, 2025</div>
+              <div className="header">Title</div>
+              <div className='body short'>Lorem Ipsum is simply dummy text of the printing and
+                typesetting industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+              </div>
+            </div>
+            {/* Stacked Widgets */}
+            <div className="stack">
+              <div className='widget'>
+                <div className='timestamp dark'>services | Oct 01, 2025</div>
+                <div className="header">
+                  Lorem Ipsum
+                  <div className="subheader">by Albert A., Global Brand</div>
+                </div>
+              </div>
+
+              <div className="widget">    
+                <div className='timestamp dark'>services | Oct 01, 2025</div>
+                <div className="header">
+                  Ipsum Dolorem
+                  <div className="subheader">by Albert A., Global Brand</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </>

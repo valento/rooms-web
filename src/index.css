@@ -127,7 +127,7 @@ input[type=text] {
   margin-top: .1rem;
   width: 90%;
   padding: 1.5rem 1rem;
-  color: --main-dark;
+  color: rgb(var(--main-dark));
   border-radius: 2rem;
   background-color: var(--main-color);
 }

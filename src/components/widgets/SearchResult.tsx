@@ -1,5 +1,7 @@
-export default function () {
+import type { SearchResultItem } from '@/types'
+
+export default function SearchResult (props: SearchResultItem) {
   return (
-    <div>Result...1...</div>
+    <div>{props.title}</div>
   )
 }
