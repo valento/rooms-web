@@ -1,6 +1,6 @@
 @import "tailwindcss";
 :root {
-    --main-color:#f7e8df;
+    --main-color: 247 232 223; /*#f7e8df*/
     --main-dark: 51 51 51;
     /* #F2DFCE */
 }
@@ -9,7 +9,7 @@ body {
   margin: auto;
   padding: 1rem;
   max-width: 1440px;
-  background-color: var(--main-color);
+  background-color: rgba(var(--main-color) / 1);
   font-size: 16px;
 }
 /* ==================================================================================================== */
@@ -35,7 +35,7 @@ body {
   container-name: brick;
   display: flex;
   min-height: 9rem;
-  background-color: var(--main-color);
+  background-color: rgba(var(--main-color) / 1);
   gap: .75rem;
 }
 
@@ -98,7 +98,7 @@ body {
   background-color: rgb(var(--main-dark) / 0.15);
 }
 .timestamp.dark {
-  color: var(--main-color);
+  color: rgba(var(--main-color) / 1);
   background: rgb(var(--main-dark) / 1);
 }
 .widget.number {
@@ -112,27 +112,60 @@ body {
 }
 
 /* ============= COMPONENTS =================================================== */
-
 .search {
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 20rem; /* fill the brick */
   padding: 1rem;
-  background-color: rgba(45,45,45,1);
+  background-color: rgba(var(--main-dark) / .98);
   color: #f2e6db;
 }
+
 input[type=text] {
-  margin: auto;
+  margin: 0 auto;
+  margin-bottom: 2rem;
   margin-top: .1rem;
   width: 90%;
   padding: 1.5rem 1rem;
   color: rgb(var(--main-dark));
   border-radius: 2rem;
-  background-color: var(--main-color);
+  background-color: rgba(var(--main-color) / 1);
 }
+
 .search .footer {
-  margin-top: auto
+  margin-top: auto;
+  font-size: small;
+  border-top: 2px solid rgba(var(--main-color) / 1);
+}
+.search .result {
+  display: block;
+  margin-top: 1rem;;
+  padding: .5rem 0;
+  border-bottom: 1px solid rgba(var(--main-color) / .3);
+  text-decoration: none;
+  color: inherit;
+  font-size: .8rem;
+}
+.search .result p {
+  text-align: left;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: bold;
+}
+.search .result .result-type {
+  padding: 0 4px;
+  background-color: rgba(var(--main-color) / 1);
+  color: rgb(var(--main-dark) / 1);
+  font-weight: 400;
+  font-size: .8rem;
+}
+.search .result p.snippet {
+  font-style: italic;
+  font-weight: 100;
 }
 
 /* ==================================================================================================== */
@@ -176,6 +209,13 @@ h1 {
   .search {
     padding: 1.1rem;
     min-height: 22rem;
+    font-size: 1rem;
+  }
+  .search .result {
+    font-size: 1.1rem;
+  }
+  .search .result .result-type {
+    font-size: .9rem;
   }
   
   input {

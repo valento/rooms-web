@@ -4,11 +4,31 @@ import { useRef, useState } from 'react'
 import type { SearchResultItem } from '@/types'
 import { searchContent } from '@/services/api'
 
-// import type { SearchResultItem } from '@/types'
-
 export default function SearchWidget () {
   const [results, setResults] = useState<SearchResultItem[]>([])
   const timeerRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const dummy_data = {
+    id: 98709,
+    title: 'Lorem Dolores Ipsum',
+    metadata: {'content_type': 'service'},
+    snippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, quis nostrum exercitationem ullam corporis suscipit laboriosam',
+    semantic_simliraty: 2135,
+    url: '/read/blog/89743',
+    semantic_similarity: 34,
+    priority: 343,
+    final_score: 34,
+  }
+
+  /** 
+   * id: number
+   *title: string
+   *snippet: string
+   *metadata: Record<string, unknown>
+   *semantic_similarity: number
+   *priority: number
+   *final_score: number
+   *url: string
+  */
 
   const search = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: string = e.currentTarget.value
@@ -35,13 +55,13 @@ export default function SearchWidget () {
   return (
     <div className='search'>
       <h1 className='title'>Ask anything... we might know <span style={{marginLeft: '28px', fontSize: '14px'}}>٩(◕‿◕)۶</span></h1>
-      <input onChange={search} className='form' type="text" />
-      <div>
+      <input id='form100' name='search_form' onChange={search} className='form' type='text' />
+      <div style={{borderTop: '8px solid rgba(var(--main-color) / .1)'}}>
         {
-          results.map( item => <SearchResult key={item.id} {...item} /> )
+          results.length? results.map( item => <div><SearchResult key={item.id} {...item} /></div> ) : <div><SearchResult key={'(*Dh98)'} {...dummy_data} /></div>
         }
       </div>
-      <div className='text-sm border-t-2 border-orange-100'>we answer only what we know about...</div>
+      <div className='footer'>we answer only what we know about...</div>
 
     </div>
   )

@@ -1,8 +1,10 @@
 export interface SearchResultItem {
   id: number
-  blockType: string
   title: string
   snippet: string
-  simliraty: number
+  metadata: Record<string, unknown>
+  semantic_similarity: number
+  priority: number
+  final_score: number
   url: string
 }
