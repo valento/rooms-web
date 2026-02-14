@@ -9,7 +9,7 @@ interface SearchResponse {
 }
 
 export async function searchContent(query: string): Promise<SearchResultItem[]> {
-  const response = await fetch(`${API_BASE}/company_search`, {
+  const response = await fetch(`${API_BASE}/search`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, limit: 10, threshold: 0.5 })
