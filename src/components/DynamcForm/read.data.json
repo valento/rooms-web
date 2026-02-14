@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["title", "body", "category"],
+  "properties": {
+    "title":    { "type": "string", "maxLength": 255 },
+    "category": { "type": "string", "enum": ["blog", "about", "doc", "event"] },
+    "body":     { "type": "string" }
+  }
+}
