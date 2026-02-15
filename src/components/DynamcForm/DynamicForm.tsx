@@ -90,7 +90,7 @@ function DynamicForm({contentId}: {contentId?: number}) {
             value={selectValue}
             onChange={e => handleChange(element.field, e.target.value)}
           >
-            <option value="">-- select --</option>
+            <option value="">-- select category --</option>
             {fieldSchema?.enum?.map((opt: string) =>
               <option key={opt} value={opt}>{opt}</option>
             )}
@@ -101,8 +101,8 @@ function DynamicForm({contentId}: {contentId?: number}) {
           <div>
             <input
               type="range"
-              min={element.min || fieldSchema.minimum || 1}
-              max={element.max || fieldSchema.maximum || 10}
+              min={element.min || fieldSchema?.minimum || 1}
+              max={element.max || fieldSchema?.maximum || 10}
               value={formData[element.field] || element.min || 1}
               onChange={e => handleChange(element.field, Number(e.target.value))}
             />
