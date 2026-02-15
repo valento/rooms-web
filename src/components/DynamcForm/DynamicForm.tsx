@@ -60,13 +60,15 @@ function DynamicForm({contentId}: {contentId?: number}) {
   function handleChange(field: string, value: string | string[] | number) {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
-
+  
+// Nested JSONB DB-objects (like metadata)
   function getNestedValue(obj: Record<string, string | number | string[]>, path: string): string | number | string[] | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const value = path.split('.').reduce((acc: any, part) => acc?.[part], obj)
     return value as string | number | string[] | undefined
   }
 
+// UI-schema Fields
   function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number }) {
     if(!content) return null
 
@@ -159,9 +161,10 @@ function DynamicForm({contentId}: {contentId?: number}) {
     }
   }
 
+// Loading...
   if (loading) return <div>Loading...</div>
   if (!content) return <div>Content not found</div>
-
+// Render Content
   return (
     <form className='json-form' onSubmit={e => {
       e.preventDefault()

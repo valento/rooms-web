@@ -1,7 +1,0 @@
-{
-  "elements": [
-    { "field": "title", "widget": "input", "placeholder": "Article title" },
-    { "field": "category", "widget": "select" },
-    { "field": "body", "widget": "textarea", "rows": 8, "placeholder": "Markdown content..." }
-  ]
-}
