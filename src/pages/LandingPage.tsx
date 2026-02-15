@@ -69,8 +69,9 @@ function App() {
         </div>
 
 {/* ======== Middle ================================================================================ */}
+
         <div className="column center">
-          <div className="brick"><div className='brand'><Brand /></div></div>
+          <div className="brick"><Brand /></div>
           <div className="brick">
             <div className='widget'><SearchWidget /></div>
           </div>

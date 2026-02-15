@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 
+import staticDataSchema from '@/assets/read.data.json' with { type: 'json' }
+import staticUiSchema from '@/assets/read.ui.json'
+
 interface SchemaProperty {
   type: string
   maxLength?: number
@@ -38,12 +41,19 @@ interface ContentWithSchemas {
   ui_schema: UISchema
 }
 
-function DynamicForm({contentId}: {contentId?: number}) {
+function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit' | 'read'}) {
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
-  const [loading, setLoading] = useState(true)
+
+  const dataSchema = content?.data_schema || staticDataSchema as Schema
+  const uiSchema = content?.ui_schema || staticUiSchema
+
+  const [loading, setLoading] = useState(mode == 'read'? true : false)
 
   useEffect(() => {
+    if (!contentId) return
+    setLoading(true)
+    
     fetch(`http://localhost:8000/content/${contentId}`)
       .then(result => result.json())
       .then((data: ContentWithSchemas) => {
@@ -70,9 +80,9 @@ function DynamicForm({contentId}: {contentId?: number}) {
 
 // UI-schema Fields
   function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number }) {
-    if(!content) return null
+    if(!content && mode == 'read') return null
 
-    const fieldSchema = content.data_schema.properties[element.field]
+    const fieldSchema = dataSchema.properties[element.field]
     const value = getNestedValue(formData, element.field)//formData[element.field] || ''
 
     switch (element.widget) {
@@ -100,7 +110,7 @@ function DynamicForm({contentId}: {contentId?: number}) {
         )}
       case 'slider':
         return (
-          <div>
+          <div className='slider'>
             <input
               type="range"
               min={element.min || fieldSchema?.minimum || 1}
@@ -162,15 +172,18 @@ function DynamicForm({contentId}: {contentId?: number}) {
   }
 
 // Loading...
-  if (loading) return <div>Loading...</div>
-  if (!content) return <div>Content not found</div>
+  if (mode == 'read' && loading) return <div>Loading...</div>
+  if (mode == 'read' && !content) return <div>Content not found</div>
+
+  console.log(uiSchema);
+  
 // Render Content
-  return (
+  return mode == 'edit'? (
     <form className='json-form' onSubmit={e => {
       e.preventDefault()
       console.log('Form data:', formData)
     }}>
-      {content.ui_schema.elements.map(el => (
+      {uiSchema.elements.map(el => (
         <div key={el.field}>
           {/* <label>{el.field}</label> */}
           {renderField(el)}
@@ -178,6 +191,12 @@ function DynamicForm({contentId}: {contentId?: number}) {
       ))}
       <button type="submit">Save</button>
     </form>
+  ) : (
+    <article>
+      {
+        uiSchema.elements.map(el => <div key={el.field}>{renderField(el)}</div>)
+      }
+    </article>
   )
 }
 

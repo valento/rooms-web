@@ -32,7 +32,7 @@ function ContentPage() {
       <div className="column center">
         <div className="brick"><div className='brand'><Brand /></div></div>
         <div className="brick">
-          {id? <DynamicForm contentId={parseInt(id)} />:
+          {id? <DynamicForm contentId={parseInt(id)} mode='read'/>:
             <div>No page</div>
           }
         </div>

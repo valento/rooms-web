@@ -30,6 +30,19 @@ body {
   order: -1;
 }
 
+.auth-bar {
+  margin: 0 .3rem;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items:center;
+  height: 4rem;
+  font-family: Cinzel, serif;
+  font-size: 10px;
+  background-color: rgb(var(--main-dark) / 0.15);
+}
+
 .brick {
   container-type: inline-size;
   container-name: brick;
@@ -62,6 +75,17 @@ body {
 }
 
 /* ------ Widget elements ------------------------------------------------------ */
+.brand {
+  display: block;
+  width: 100%;
+  /* height: 60px; */
+  border: double 1px black;
+  border-width: 0 8px;
+  font-family: "Diplomata SC", serif;
+  font-size: 2rem;
+  font-weight: 400;
+  font-style: normal;
+}
 .title {
   font-family: "Vollkorn", serif;
 }
@@ -77,16 +101,6 @@ body {
   font-family: "Vollkorn", serif;
   text-align: left;
   line-height: 1rem;
-}
-.brand {
-  width: 100%;
-  height: 60px;
-  border: double 1px black;
-  border-width: 0 8px;
-  font-family: "Diplomata SC", serif;
-  font-size: 2rem;
-  font-weight: 400;
-  font-style: normal;
 }
 .brand img{
   display: inline;
@@ -160,6 +174,9 @@ input[type=text] {
   color: rgba(var(--main-color) / 1);
   background-color: rgb(var(--main-dark) / 1);
   border-radius: .5rem;
+}
+.json-form .slider input {
+  width: 85%;
 }
 
 /* ============= COMPONENTS =================================================== */
@@ -235,6 +252,10 @@ h1 {
     border: .3rem solid --main-dark;
     border-style: double;
   }
+  
+  .json-form .slider input {
+    width: 80%;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -242,6 +263,11 @@ h1 {
     display: grid;
     gap: .55rem;
     grid-template-columns: 1fr 2fr 1fr;
+  }
+  .page-grid.user {
+    display: grid;
+    gap: .55rem;
+    grid-template-columns: .3fr 1fr;
   }
   .brand {
     font-size: 3rem;

@@ -1,0 +1,13 @@
+{
+    "elements": [
+        {"field": "title", "widget": "input", "placeholder": "Title"},
+        {"field": "metadata.read_category", "widget": "select"},
+        {"field": "metadata.subcategory", "widget": "input", "placeholder": "Subcategory"},
+        {"field": "metadata.tags", "widget": "tag-input", "placeholder": "Add tags"},
+        {"field": "body", "widget": "textarea", "rows": 15, "placeholder": "Content (Markdown)..."},
+        {"field": "metadata.author", "widget": "input", "placeholder": "Author (optional)"},
+        {"field": "metadata.priority", "widget": "slider", "min": 0, "max": 10},
+        {"field": "metadata.status", "widget": "select"},
+        {"field": "metadata.seo_keywords", "widget": "tag-input", "placeholder": "SEO keywords"}
+    ]
+}
