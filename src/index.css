@@ -39,7 +39,7 @@ body {
   align-items:center;
   height: 4rem;
   font-family: Cinzel, serif;
-  font-size: 10px;
+  font-size: 1rem;
   background-color: rgb(var(--main-dark) / 0.15);
 }
 
@@ -145,7 +145,6 @@ input[type=text] {
   margin-bottom: 0rem;
   padding-top: 1rem;
   border-top: 6px solid rgb(var(--main-dark) / 1);
-  border-bottom: 6px solid rgb(var(--main-dark) / 1);
 }
 .json-form input {
   border-radius: .5rem;
@@ -156,8 +155,10 @@ input[type=text] {
 .json-form select {
   display: flex;
   margin: 0 5%;
+  min-width: 25%;
   margin-bottom: .5rem;
-  padding: 0 .3rem;
+  padding: .3rem;
+  font-size: 1.1rem;
   border: 1px solid rgb(var(--main-dark) / .5);
   border-radius: 4px;
 }
@@ -167,16 +168,46 @@ input[type=text] {
   border: 1px solid rgb(var(--main-dark) / .5);
   border-radius: 4px;
 }
-.json-form button {
-  width: 50%;
-  margin: 2rem auto;
-  padding: 1rem 0;
-  color: rgba(var(--main-color) / 1);
-  background-color: rgb(var(--main-dark) / 1);
-  border-radius: .5rem;
+.json-form .title {
+  font: inherit;
+}
+.json-form .tags, .json-form .subcategory {
+  padding: 1rem;
+  font-style: italic;
+}
+.json-form .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.json-form .tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0rem 0.3rem;
+  font-size: 0.85rem;
+  cursor: default;
+}
+.json-form .tag-chip button {
+  padding: .5rem 1rem;
+  border: 3px solid rgb(var(--main-dark) / .5);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
 }
 .json-form .slider input {
   width: 85%;
+}
+.json-form .submit {
+  min-width: 90%;
+  margin: .5rem;
+  padding: .5rem .2rem;
+  border: 3px solid rgb(var(--main-dark) / .5);
+  border-radius: 4px;
+  color: rgba(var(--main-color) / 1);
+  font-size: 1.5rem;
+  background-color: rgb(var(--main-dark) / 1);
 }
 
 /* ============= COMPONENTS =================================================== */
@@ -256,6 +287,9 @@ h1 {
   .json-form .slider input {
     width: 80%;
   }
+  .json-form .submit {
+    min-width: 30%;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -267,7 +301,7 @@ h1 {
   .page-grid.user {
     display: grid;
     gap: .55rem;
-    grid-template-columns: .3fr 1fr;
+    grid-template-columns: .3fr 1fr .3fr;
   }
   .brand {
     font-size: 3rem;
@@ -293,9 +327,12 @@ h1 {
   }
 }
 
+/* ------------- CONTAINERS ------------------------------------------------------------------- */
+
 @container brick (min-width: 200px) {
   .brick > .widget::after { content: "200+"}
 }
+
 @container brick (min-width: 400px) {
   .brick > .widget::after { content: "400+"}
 }

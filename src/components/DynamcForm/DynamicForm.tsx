@@ -45,7 +45,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
 
-  const dataSchema = content?.data_schema || staticDataSchema as Schema
+  const dataSchema = content?.data_schema || staticDataSchema
   const uiSchema = content?.ui_schema || staticUiSchema
 
   const [loading, setLoading] = useState(mode == 'read'? true : false)
@@ -82,15 +82,18 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
   function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number }) {
     if(!content && mode == 'read') return null
 
-    const fieldSchema = dataSchema.properties[element.field]
+    const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
+    console.log('Fieldschema', fieldSchema);
+    
     const value = getNestedValue(formData, element.field)//formData[element.field] || ''
-
+    
     switch (element.widget) {
       case 'input':
         return (
           <input
             type="text"
             value={value}
+            className={element.field}
             placeholder={element.placeholder}
             onChange={e => handleChange(element.field, e.target.value)}
           />
@@ -102,7 +105,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
             value={selectValue}
             onChange={e => handleChange(element.field, e.target.value)}
           >
-            <option value="">-- select category --</option>
+            <option value={value}>-- select --</option>
             {fieldSchema?.enum?.map((opt: string) =>
               <option key={opt} value={opt}>{opt}</option>
             )}
@@ -130,18 +133,19 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
               : []
           return (
             <div>
-              <div>
+              <div className='tag-list'>
                 {tags.map((tag, i) => (
-                  <span key={i}>
-                    {tag}
+                  <span key={i} className='tag-chip'>
+                    
                     <button type="button" onClick={() =>
                       handleChange(element.field, tags.filter((_, idx) => idx !== i))
-                    }>×</button>
+                    }>{tag} ×</button>
                   </span>
                 ))}
               </div>
               <input
                 type="text"
+                className='tags'
                 placeholder={element.placeholder}
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
@@ -189,7 +193,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
           {renderField(el)}
         </div>
       ))}
-      <button type="submit">Save</button>
+      <button className='submit' type="submit">Save</button>
     </form>
   ) : (
     <article>

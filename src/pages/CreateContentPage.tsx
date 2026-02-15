@@ -22,8 +22,7 @@ export default function CreateContentPage({mode='read'}:{mode: 'read' | 'edit'})
       <div className="column center">
         <div className="brick"><Brand /></div>
         <div className="brick">
-          {user_id? <DynamicForm mode={mode}/>: <div>No page</div>
-          }
+          {user_id? <DynamicForm mode={mode}/>: <div>No page</div>}
         </div>
       </div>
 
