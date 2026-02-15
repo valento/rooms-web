@@ -40,7 +40,7 @@ interface ContentWithSchemas {
 
 function DynamicForm({contentId}: {contentId?: number}) {
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
-  const [formData, setFormData] = useState<Record<string, string | string | string[]>>({})
+  const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -57,17 +57,17 @@ function DynamicForm({contentId}: {contentId?: number}) {
     
   } ,[contentId])
 
-  function handleChange(field: string, value: string) {
+  function handleChange(field: string, value: string | string[] | number) {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  function getNestedValue(obj: Record<string, string | string | string[]>, path: string): string | number | string[] | undefined {
+  function getNestedValue(obj: Record<string, string | number | string[]>, path: string): string | number | string[] | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const value = path.split('.').reduce((acc: any, part) => acc?.[part], obj)
     return value as string | number | string[] | undefined
   }
 
-  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number }) {
+  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number }) {
     if(!content) return null
 
     const fieldSchema = content.data_schema.properties[element.field]
@@ -95,6 +95,55 @@ function DynamicForm({contentId}: {contentId?: number}) {
               <option key={opt} value={opt}>{opt}</option>
             )}
           </select>
+        )}
+      case 'slider':
+        return (
+          <div>
+            <input
+              type="range"
+              min={element.min || fieldSchema.minimum || 1}
+              max={element.max || fieldSchema.maximum || 10}
+              value={formData[element.field] || element.min || 1}
+              onChange={e => handleChange(element.field, Number(e.target.value))}
+            />
+            <span>{formData[element.field] || element.min || 1}</span>
+          </div>
+        )
+      case 'tag-input':
+        {
+          const tags: string[] = Array.isArray(value) 
+            ? value 
+            : typeof value === 'string' && value 
+              ? [value] 
+              : []
+          return (
+            <div>
+              <div>
+                {tags.map((tag, i) => (
+                  <span key={i}>
+                    {tag}
+                    <button type="button" onClick={() =>
+                      handleChange(element.field, tags.filter((_, idx) => idx !== i))
+                    }>×</button>
+                  </span>
+                ))}
+              </div>
+              <input
+                type="text"
+                placeholder={element.placeholder}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const input = e.target as HTMLInputElement
+                    const val = input.value.trim()
+                    if (val && !tags.includes(val)) {
+                      handleChange(element.field, [...tags, val])
+                      input.value = ''
+                    }
+                  }
+                }}
+              />
+            </div>
         )}
       case 'textarea':
         return (
