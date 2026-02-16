@@ -45,8 +45,8 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
 
-  const dataSchema = content?.data_schema || staticDataSchema
-  const uiSchema = content?.ui_schema || staticUiSchema
+  const dataSchema = staticDataSchema
+  const uiSchema = staticUiSchema
 
   const [loading, setLoading] = useState(mode == 'read'? true : false)
 
@@ -58,6 +58,11 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
       .then(result => result.json())
       .then((data: ContentWithSchemas) => {
         setContent(data)
+        setFormData({
+          title: data.title,
+          body: data.body,
+          ...data.metadata
+        })
         setLoading(false)
       })
       .catch( err => {
@@ -83,7 +88,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
     if(!content && mode == 'read') return null
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
-    const value = getNestedValue(formData, element.field)//formData[element.field] || ''
+    const value = getNestedValue(formData, element.field)// formData[element.field] || ''
 
     if (mode === 'read') {
       switch (element.widget) {
@@ -96,12 +101,14 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
         case 'slider':
           return null
         case 'tag-input':
-          const readTags: string[] = Array.isArray(value) ? value : []
-          return readTags.length ? (
-            <div className="tag-list">
-              {readTags.map((tag, i) => <span key={i} className="tag-chip">{tag}</span>)}
-            </div>
-          ) : null
+          {
+            const readTags: string[] = Array.isArray(value) ? value : []
+            return readTags.length ? (
+              <div className="tag-list">
+                {readTags.map((tag, i) => <span key={i} className="tag-chip">{tag}</span>)}
+              </div>
+            ) : null
+          }
         default:
           return <span>{value}</span>
       }
@@ -119,17 +126,18 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
           />
         )
       case 'select':
-        {const selectValue = value as string || ''
-        return (
-          <select
-            value={selectValue}
-            onChange={e => handleChange(element.field, e.target.value)}
-          >
-            <option value={value}>-- select --</option>
-            {fieldSchema?.enum?.map((opt: string) =>
-              <option key={opt} value={opt}>{opt}</option>
-            )}
-          </select>
+        {
+          const selectValue = value as string || ''
+          return (
+            <select
+              value={selectValue}
+              onChange={e => handleChange(element.field, e.target.value)}
+            >
+              <option value={value}>-- select --</option>
+              {fieldSchema?.enum?.map((opt: string) =>
+                <option key={opt} value={opt}>{opt}</option>
+              )}
+            </select>
         )}
       case 'slider':
         return (
@@ -198,8 +206,6 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
 // Loading...
   if (mode == 'read' && loading) return <div>Loading...</div>
   if (mode == 'read' && !content) return <div>Content not found</div>
-
-  console.log(uiSchema);
   
 // Render Content
   return mode == 'edit'? (

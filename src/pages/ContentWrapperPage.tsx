@@ -28,7 +28,7 @@ export default function ContentWrapperPage({mode='read'}:{mode: 'read' | 'edit'}
       <div className="column center">
         <div className="brick"><Brand /></div>
         <div className="brick">
-          {user_id? <DynamicForm mode={mode}/>: <div>No page</div>}
+          {user_id || id? <DynamicForm contentId={id? Number(id) :  undefined} mode={mode}/>: <div>No page</div>}
         </div>
       </div>
 
