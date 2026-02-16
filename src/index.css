@@ -163,7 +163,7 @@ input[type=text] {
   border-radius: 4px;
 }
 .json-form textarea {
-  width: 95%;
+  width: 90%;
   padding: 1rem;
   border: 1px solid rgb(var(--main-dark) / .5);
   border-radius: 4px;
@@ -208,6 +208,39 @@ input[type=text] {
   color: rgba(var(--main-color) / 1);
   font-size: 1.5rem;
   background-color: rgb(var(--main-dark) / 1);
+}
+
+/* ----------- Article ContentPage ----------------------------------------- */
+.content-article {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.content-article h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.byline {
+  font-style: italic;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.article-body {
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  background: #eee;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* ============= COMPONENTS =================================================== */

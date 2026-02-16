@@ -83,9 +83,29 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
     if(!content && mode == 'read') return null
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
-    console.log('Fieldschema', fieldSchema);
-    
     const value = getNestedValue(formData, element.field)//formData[element.field] || ''
+
+    if (mode === 'read') {
+      switch (element.widget) {
+        case 'input':
+          return <span>{value}</span>
+        case 'textarea':
+          return <div>{value}</div>
+        case 'select':
+          return <span>{value}</span>
+        case 'slider':
+          return null
+        case 'tag-input':
+          const readTags: string[] = Array.isArray(value) ? value : []
+          return readTags.length ? (
+            <div className="tag-list">
+              {readTags.map((tag, i) => <span key={i} className="tag-chip">{tag}</span>)}
+            </div>
+          ) : null
+        default:
+          return <span>{value}</span>
+      }
+   }
     
     switch (element.widget) {
       case 'input':
@@ -196,7 +216,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
       <button className='submit' type="submit">Save</button>
     </form>
   ) : (
-    <article>
+    <article className='content-article'>
       {
         uiSchema.elements.map(el => <div key={el.field}>{renderField(el)}</div>)
       }
