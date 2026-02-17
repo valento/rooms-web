@@ -1,7 +1,7 @@
 import nobrain from '@/assets/brain.svg'
 import UserWidget from './UserWidget'
 import { Link } from 'react-router-dom'
-export default function () {
+export default function Brand () {
   return (
     <>  
       <div className='brand'>

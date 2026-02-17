@@ -15,35 +15,25 @@ interface SchemaProperty {
   const?: string
   properties?: Record<string, SchemaProperty>
 }
-interface Schema {
-  type: string
-  properties: Record<string, SchemaProperty>}
-
-interface UIElement {
-  field: string
-  widget: string
-  placeholder?: string
-  rows?: number
-  min?: number
-  max?: number
-}
-
-interface UISchema {
-  elements: UIElement[]
-}
 
 interface ContentWithSchemas {
   id: number
   title: string
+  deck: string
   body: string
+  slug: string
+  author_name: string
   metadata: Record<string, SchemaProperty>
-  data_schema: Schema
-  ui_schema: UISchema
+  created_at: string
+  updated_at: string
+  // data_schema: Schema
+  // ui_schema: UISchema
 }
 
 function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit' | 'read'}) {
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
+// console.log(formData);
 
   const dataSchema = staticDataSchema
   const uiSchema = staticUiSchema
@@ -58,9 +48,20 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
       .then(result => result.json())
       .then((data: ContentWithSchemas) => {
         setContent(data)
+        
         setFormData({
           title: data.title,
+          deck: data.deck,
           body: data.body,
+          created_at: data.created_at,
+          updated_at: new Date(data.updated_at).toLocaleDateString('en-US',
+            {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            }),
+            author: data.author_name,
+            slug: data.slug,
           ...data.metadata
         })
         setLoading(false)
@@ -71,16 +72,67 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
       })
     
   } ,[contentId])
+  
 
   function handleChange(field: string, value: string | string[] | number) {
+    console.log(field, value);
+    
     setFormData(prev => ({ ...prev, [field]: value }))
   }
   
 // Nested JSONB DB-objects (like metadata)
-  function getNestedValue(obj: Record<string, string | number | string[]>, path: string): string | number | string[] | undefined {
+  function getNestedValue(obj: Record<string, string | number | string[]>, path: string): string | number | string[] | undefined {    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const value = path.split('.').reduce((acc: any, part) => acc?.[part], obj)
     return value as string | number | string[] | undefined
+  }
+
+  async function handleSubmit(e: React.SubmitEvent) {
+    e.preventDefault()
+    
+    // Restructure formData to match API expectation
+    const payload = {
+      title: formData.title as string,
+      deck: formData.deck as string,
+      slug: formData.slug as string,
+      body: formData.body as string,
+      metadata: {
+        content_type: 'read',
+        read_category: formData.read_category,
+        subcategory: formData.subcategory,
+        tags: formData.tags,
+        priority: formData.priority || 5,
+        status: formData.status,
+        seo_keywords: formData.seo_keywords
+      },
+      author_id: formData.author_id as number || 1
+    }
+
+    console.log('Field lengths:', {
+      title: payload.title?.length,
+      deck: payload.deck?.length,
+      slug: payload.slug?.length,
+      body: payload.body?.length
+    })
+
+    try {
+      const REQUEST_URL = contentId? `http://localhost:8000/content/${contentId}` : 'http://localhost:8000/content/'
+      const REQUEST_METOD = contentId? 'PUT' : 'POST'
+      
+      const response = await fetch(REQUEST_URL, {
+        method: REQUEST_METOD,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Created:', data)
+        // Redirect or show success message
+      }
+    } catch (error) {
+      console.error('Failed to create content:', error)
+    }
   }
 
 // UI-schema Fields
@@ -93,11 +145,11 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
     if (mode === 'read') {
       switch (element.widget) {
         case 'input':
-          return <span>{value}</span>
+          return <div className={element.field}>{value}</div>
         case 'textarea':
-          return <div>{value}</div>
+          return <div className={element.field}>{value}</div>
         case 'select':
-          return <span>{value}</span>
+          return null
         case 'slider':
           return null
         case 'tag-input':
@@ -105,12 +157,12 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
             const readTags: string[] = Array.isArray(value) ? value : []
             return readTags.length ? (
               <div className="tag-list">
-                {readTags.map((tag, i) => <span key={i} className="tag-chip">{tag}</span>)}
+                {readTags.map((tag, i) => <div key={i} className="tag-chip">{tag}</div>)}
               </div>
             ) : null
           }
         default:
-          return <span>{value}</span>
+          return <div className={element.field}>{value}</div>
       }
    }
     
@@ -128,14 +180,16 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
       case 'select':
         {
           const selectValue = value as string || ''
+          
           return (
-            <select
-              value={selectValue}
-              onChange={e => handleChange(element.field, e.target.value)}
+            <select id={selectValue} 
+            className={selectValue}
+            value={selectValue}
+            onChange={e => handleChange(element.field, e.target.value)}
             >
-              <option value={value}>-- select --</option>
-              {fieldSchema?.enum?.map((opt: string) =>
-                <option key={opt} value={opt}>{opt}</option>
+              <option>-- select one --</option>
+              {fieldSchema?.enum?.map((opt: string) => 
+                <option key={opt} value={opt} >{opt}</option>
               )}
             </select>
         )}
@@ -160,7 +214,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
               ? [value] 
               : []
           return (
-            <div>
+            <div className={element.field}>
               <div className='tag-list'>
                 {tags.map((tag, i) => (
                   <span key={i} className='tag-chip'>
@@ -199,7 +253,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
           />
         )
       default:
-        return <p>Unknown widget: {element.widget}</p>
+        return <p className='hideme'>Unknown widget: {element.field}</p>
     }
   }
 
@@ -209,12 +263,13 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
   
 // Render Content
   return mode == 'edit'? (
-    <form className='json-form' onSubmit={e => {
-      e.preventDefault()
-      console.log('Form data:', formData)
-    }}>
+    <form className='json-form'
+      onSubmit={async (e) => {
+        e.preventDefault()
+        handleSubmit(e)
+      }}>
       {uiSchema.elements.map(el => (
-        <div key={el.field}>
+        <div key={el.field} >
           {/* <label>{el.field}</label> */}
           {renderField(el)}
         </div>
@@ -222,10 +277,13 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
       <button className='submit' type="submit">Save</button>
     </form>
   ) : (
-    <article className='content-article'>
+    <article>
+      <div>
       {
         uiSchema.elements.map(el => <div key={el.field}>{renderField(el)}</div>)
       }
+      <div className='social'>social tools</div>
+      </div>
     </article>
   )
 }
